@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace</title>
+    <style>
+        .tabs {
+            display: flex;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .tab-button {
+            padding: 10px;
+            margin-right: 5px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .active-tab {
+            display: block;
+        }
+        .active-button {
+            background-color: #ddd;
+        }
+    </style>
+    <script>
+        function showCategory(category) {
+            // Hide all tab contents
+            var contents = document.querySelectorAll('.tab-content');
+            contents.forEach(function(content) {
+                content.classList.remove('active-tab');
+            });
+
+            // Remove active class from all tab buttons
+            var buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(function(button) {
+                button.classList.remove('active-button');
+            });
+
+            // Show the selected category
+            document.getElementById(category).classList.add('active-tab');
+
+            // Add active class to the clicked button
+            document.querySelector(`.tab-button[onclick="showCategory('${category}')"]`).classList.add('active-button');
+        }
+
+        window.onload = function() {
+            // Set default tab to 'eletronicos'
+            showCategory('eletronicos');
+        }
+    </script>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('cadastro') }}">Cadastro</a>
+    </nav>
+    <h1>Marketplace</h1>
+
+    <div class="tabs">
+        <div class="tab-button" onclick="showCategory('eletronicos')">Eletrônicos</div>
+        <div class="tab-button" onclick="showCategory('moveis')">Móveis</div>
+        <div class="tab-button" onclick="showCategory('roupas')">Roupas</div>
+        <div class="tab-button" onclick="showCategory('utensilios')">Utensílios de Cozinha</div>
+    </div>
+
+    <div id="eletronicos" class="tab-content">
+        {% for anuncio in anuncios['Eletrônicos'] %}
+            <div>
+                <h2>{{ anuncio.titulo }}</h2>
+                <p>{{ anuncio.descricao }}</p>
+                <p>{{ anuncio.preco }}</p>
+                <button type="button">Adicionar aos Favoritos</button>
+                <div>
+                    <h3>Perguntas:</h3>
+                    <ul>
+                        {% for pergunta in anuncio.perguntas %}
+                            <li>{{ pergunta }}</li>
+                        {% endfor %}
+                    </ul>
+                    <form>
+                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
+                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                    <button type="button">Comprar este produto</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="moveis" class="tab-content">
+        {% for anuncio in anuncios['Móveis'] %}
+            <div>
+                <h2>{{ anuncio.titulo }}</h2>
+                <p>{{ anuncio.descricao }}</p>
+                <p>{{ anuncio.preco }}</p>
+                <div>
+                    <h3>Perguntas:</h3>
+                    <ul>
+                        {% for pergunta in anuncio.perguntas %}
+                            <li>{{ pergunta }}</li>
+                        {% endfor %}
+                    </ul>
+                    <form>
+                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
+                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                    <button type="button">Comprar este produto</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="roupas" class="tab-content">
+        {% for anuncio in anuncios['Roupas'] %}
+            <div>
+                <h2>{{ anuncio.titulo }}</h2>
+                <p>{{ anuncio.descricao }}</p>
+                <p>{{ anuncio.preco }}</p>
+                <div>
+                    <h3>Perguntas:</h3>
+                    <ul>
+                        {% for pergunta in anuncio.perguntas %}
+                            <li>{{ pergunta }}</li>
+                        {% endfor %}
+                    </ul>
+                    <form>
+                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
+                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                    <button type="button">Comprar este produto</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="utensilios" class="tab-content">
+        {% for anuncio in anuncios['Utensílios de Cozinha'] %}
+            <div>
+                <h2>{{ anuncio.titulo }}</h2>
+                <p>{{ anuncio.descricao }}</p>
+                <p>{{ anuncio.preco }}</p>
+                <div>
+                    <h3>Perguntas:</h3>
+                    <ul>
+                        {% for pergunta in anuncio.perguntas %}
+                            <li>{{ pergunta }}</li>
+                        {% endfor %}
+                    </ul>
+                    <form>
+                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
+                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
+                        <button type="submit">Enviar</button>
+                    </form>
+                    <button type="button">Comprar este produto</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

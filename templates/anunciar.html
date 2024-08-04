@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anunciar Produto</title>
+</head>
+<body>
+    <h1>Anunciar Produto</h1>
+    <form>
+        <div>
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" required>
+        </div>
+        <div>
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao" rows="4" required></textarea>
+        </div>
+        <div>
+            <label for="preco">Preço:</label>
+            <input type="text" id="preco" name="preco" required>
+        </div>
+        <div>
+            <label for="imagem">URL da Imagem:</label>
+            <input type="text" id="imagem" name="imagem">
+        </div>
+        <div>
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca">
+        </div>
+        <div>
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" name="modelo">
+        </div>
+        <div>
+            <label for="condicao">Condição:</label>
+            <select id="condicao" name="condicao">
+                <option value="">Selecione</option>
+                <option value="novo">Novo</option>
+                <option value="usado">Usado</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Anunciar</button>
+            <button type="button" onclick="window.history.back()">Voltar</button>
+        </div>
+    </form>
+</body>
+</html>

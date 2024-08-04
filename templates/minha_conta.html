@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Conta</title>
+</head>
+<body>
+    <div>
+        <h1>Minha Conta</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('anunciar') }}">Anunciar</a></li>
+                <li><a href="{{ url_for('meusanuncios') }}">Ver meus Anúncios</a></li>
+                <li><a href="{{ url_for('favoritos') }}">Ver Anúncios Favoritos</a></li>
+                <li><a href="{{ url_for('relatorio') }}">Relatório de Compras e Vendas</a></li>
+                <li><a href="{{ url_for('home') }}">Comprar</a></li>
+            </ul>
+        </nav>
+    </div>
+    <button type="button" onclick="window.history.back()">Voltar</button>
+</body>
+</html>
+
