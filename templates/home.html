@@ -5,26 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketplace</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: right;
+        }
+        nav a, nav button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #555;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        nav a:hover, nav button:hover {
+            background-color: #777;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
         .tabs {
             display: flex;
-            cursor: pointer;
+            justify-content: center;
             margin-bottom: 10px;
         }
         .tab-button {
-            padding: 10px;
-            margin-right: 5px;
+            padding: 10px 20px;
+            margin: 0 5px;
             background-color: #f1f1f1;
             border: 1px solid #ccc;
             border-radius: 4px;
+            cursor: pointer;
+        }
+        .tab-button.active-button {
+            background-color: #ddd;
         }
         .tab-content {
             display: none;
+            padding: 20px;
         }
-        .active-tab {
+        .tab-content.active-tab {
             display: block;
         }
-        .active-button {
-            background-color: #ddd;
+        .tab-content div {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .tab-content h2 {
+            margin-top: 0;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
         }
     </style>
     <script>
@@ -49,8 +106,8 @@
         }
 
         window.onload = function() {
-            // Set default tab to 'eletronicos'
-            showCategory('eletronicos');
+            // Set default tab to 'Eletrônicos'
+            showCategory('Eletrônicos');
         }
     </script>
 </head>
@@ -58,111 +115,46 @@
     <nav>
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('cadastro') }}">Cadastro</a>
+        {% if user_id is not none %}
+        <a href="{{ url_for('minha_conta', user_id=user_id) }}">Minha conta</a>
+            <form action="{{ url_for('logout') }}" method="post" style="display: inline;">
+                <button type="submit">Logout</button>
+            </form>
+        {% endif %}
     </nav>
     <h1>Marketplace</h1>
 
     <div class="tabs">
-        <div class="tab-button" onclick="showCategory('eletronicos')">Eletrônicos</div>
-        <div class="tab-button" onclick="showCategory('moveis')">Móveis</div>
-        <div class="tab-button" onclick="showCategory('roupas')">Roupas</div>
-        <div class="tab-button" onclick="showCategory('utensilios')">Utensílios de Cozinha</div>
+        <div class="tab-button" onclick="showCategory('Eletrônicos')">Eletrônicos</div>
+        <div class="tab-button" onclick="showCategory('Móveis')">Móveis</div>
+        <div class="tab-button" onclick="showCategory('Roupas')">Roupas</div>
+        <div class="tab-button" onclick="showCategory('Utensílios de Cozinha')">Utensílios de Cozinha</div>
     </div>
 
-    <div id="eletronicos" class="tab-content">
-        {% for anuncio in anuncios['Eletrônicos'] %}
-            <div>
-                <h2>{{ anuncio.titulo }}</h2>
-                <p>{{ anuncio.descricao }}</p>
-                <p>{{ anuncio.preco }}</p>
-                <button type="button">Adicionar aos Favoritos</button>
+    {% for categoria, produtos in anuncios.items() %}
+        <div id="{{ categoria }}" class="tab-content">
+            {% for produto in produtos %}
                 <div>
-                    <h3>Perguntas:</h3>
-                    <ul>
-                        {% for pergunta in anuncio.perguntas %}
-                            <li>{{ pergunta }}</li>
-                        {% endfor %}
-                    </ul>
-                    <form>
-                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
-                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
-                        <button type="submit">Enviar</button>
-                    </form>
-                    <button type="button">Comprar este produto</button>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+                    <h2>{{ produto.titulo }}</h2>
+                    <p>{{ produto.descricao }}</p>
+                    <p>Preço: {{ produto.preco }}</p>
+                    <p>Marca: {{ produto.marca }}</p>
+                    <p>Modelo: {{ produto.modelo }}</p>
+                    <p>Condição: {{ produto.condicao }}</p>
+                    <p>Imagem: <a href="{{ produto.url_imagem }}" target="_blank">Visualizar</a></p>
 
-    <div id="moveis" class="tab-content">
-        {% for anuncio in anuncios['Móveis'] %}
-            <div>
-                <h2>{{ anuncio.titulo }}</h2>
-                <p>{{ anuncio.descricao }}</p>
-                <p>{{ anuncio.preco }}</p>
-                <div>
-                    <h3>Perguntas:</h3>
-                    <ul>
-                        {% for pergunta in anuncio.perguntas %}
-                            <li>{{ pergunta }}</li>
-                        {% endfor %}
-                    </ul>
-                    <form>
-                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
-                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
-                        <button type="submit">Enviar</button>
-                    </form>
-                    <button type="button">Comprar este produto</button>
+                    <button type="button">Adicionar aos Favoritos</button>
+                    <!-- Botão Comprar com condição -->
+                    {% if user_id is not none and produto.id_vendedor != user_id %}
+                        <form action="{{ url_for('comprar', id_produto=produto.id_produtos) }}" method="post" style="display: inline;">
+                            <button type="submit">Comprar</button>
+                        </form>
+                    {% else %}
+                        <button type="button" disabled>Comprar</button>
+                    {% endif %}
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-
-    <div id="roupas" class="tab-content">
-        {% for anuncio in anuncios['Roupas'] %}
-            <div>
-                <h2>{{ anuncio.titulo }}</h2>
-                <p>{{ anuncio.descricao }}</p>
-                <p>{{ anuncio.preco }}</p>
-                <div>
-                    <h3>Perguntas:</h3>
-                    <ul>
-                        {% for pergunta in anuncio.perguntas %}
-                            <li>{{ pergunta }}</li>
-                        {% endfor %}
-                    </ul>
-                    <form>
-                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
-                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
-                        <button type="submit">Enviar</button>
-                    </form>
-                    <button type="button">Comprar este produto</button>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-
-    <div id="utensilios" class="tab-content">
-        {% for anuncio in anuncios['Utensílios de Cozinha'] %}
-            <div>
-                <h2>{{ anuncio.titulo }}</h2>
-                <p>{{ anuncio.descricao }}</p>
-                <p>{{ anuncio.preco }}</p>
-                <div>
-                    <h3>Perguntas:</h3>
-                    <ul>
-                        {% for pergunta in anuncio.perguntas %}
-                            <li>{{ pergunta }}</li>
-                        {% endfor %}
-                    </ul>
-                    <form>
-                        <label for="pergunta-{{ anuncio.id }}">Faça uma pergunta:</label>
-                        <textarea id="pergunta-{{ anuncio.id }}" name="pergunta"></textarea>
-                        <button type="submit">Enviar</button>
-                    </form>
-                    <button type="button">Comprar este produto</button>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
 </body>
 </html>

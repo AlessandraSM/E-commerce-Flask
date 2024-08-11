@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Anunciar Produto</h1>
-    <form>
+    <form action="{{ url_for('anunciar', id=user_id) }}" method="post">
         <div>
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" name="titulo" required>
@@ -25,6 +25,16 @@
             <input type="text" id="imagem" name="imagem">
         </div>
         <div>
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" name="categoria" required>
+                <option value="">Selecione</option>
+                <option value="1">Eletrônicos</option>
+                <option value="2">Móveis</option>
+                <option value="3">Roupas</option>
+                <option value="4">Utensílios de Cozinha</option>
+            </select>
+        </div>
+        <div>
             <label for="marca">Marca:</label>
             <input type="text" id="marca" name="marca">
         </div>
@@ -34,7 +44,7 @@
         </div>
         <div>
             <label for="condicao">Condição:</label>
-            <select id="condicao" name="condicao">
+            <select id="condicao" name="condicao" required>
                 <option value="">Selecione</option>
                 <option value="novo">Novo</option>
                 <option value="usado">Usado</option>

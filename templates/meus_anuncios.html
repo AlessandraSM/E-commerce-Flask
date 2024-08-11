@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Anúncios</title>
+</head>
+<body>
+    <h1>Meus Anúncios</h1>
+
+    <div>
+        {% for produto in produtos %}
+            <div>
+                <h2>{{ produto.titulo }}</h2>
+                <p>Descrição: {{ produto.descricao }}</p>
+                <p>Preço: R${{ produto.preco }}</p>
+                <p>Marca: {{ produto.marca }}</p>
+                <p>Modelo: {{ produto.modelo }}</p>
+                <p>Condição: {{ produto.condicao }}</p>
+                <p>Imagem: <a href="{{ produto.url_imagem }}" target="_blank">Visualizar</a></p>
+                <form action="{{ url_for('delete_produto', produto_id=produto.id_produtos) }}" method="post">
+                    <button type="submit">Deletar</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('minha_conta', user_id=user_id) }}">Voltar para Minha Conta</a>
+</body>
+</html>
+
+
