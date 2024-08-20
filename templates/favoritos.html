@@ -4,25 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anúncios Favoritos</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .favorite-card {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .favorite-card h2 {
+            margin-top: 0;
+        }
+        .favorite-card p {
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Anúncios Favoritos</h1>
-    <div>
-        <!-- Exemplo de anúncio favoritado -->
-        <div>
-            <h2>Título do Anúncio 1</h2>
-            <p>Descrição breve do anúncio 1.</p>
-            <p>Preço: R$100,00</p>
-            <p><a href="#">Ver Detalhes</a></p>
+    <div class="container">
+        <h1 class="text-center">Anúncios Favoritos</h1>
+        <div class="row">
+            <!-- Exemplo de anúncio favoritado -->
+            <div class="col-md-4">
+                <div class="favorite-card">
+                    <h2>Título do Anúncio 1</h2>
+                    <p>Descrição breve do anúncio 1.</p>
+                    <p><strong>Preço:</strong> R$100,00</p>
+                    <p><a href="#" class="btn btn-info">Ver Detalhes</a></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="favorite-card">
+                    <h2>Título do Anúncio 2</h2>
+                    <p>Descrição breve do anúncio 2.</p>
+                    <p><strong>Preço:</strong> R$200,00</p>
+                    <p><a href="#" class="btn btn-info">Ver Detalhes</a></p>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <h2>Título do Anúncio 2</h2>
-            <p>Descrição breve do anúncio 2.</p>
-            <p>Preço: R$200,00</p>
-            <p><a href="#">Ver Detalhes</a></p>
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Voltar</button>
         </div>
-        <button type="button" onclick="window.history.back()">Voltar</button>
     </div>
 </body>
 </html>

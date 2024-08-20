@@ -1,16 +1,27 @@
-from flask import Flask, render_template, request, session, make_response, redirect, url_for
+from flask import Flask, render_template, request, session, make_response, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import (current_user, LoginManager, login_user, logout_user, login_required)
 from datetime import datetime
 import pytz
+import hashlib
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 app = Flask(__name__)
-app.secret_key = '12345678'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://alessandra:alessandra@localhost:3306/mydb'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://alessandramarmir:senhaforte1987@alessandramarmiroli.mysql.pythonanywhere-services.com/alessandramarmir$mydb'
+
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+app.secret_key = '12345678'
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+db.init_app(app)
+
 
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
@@ -30,6 +41,15 @@ class Usuario(db.Model):
         self.senha = senha
         self.endereco = endereco
         self.tipo_usuario = tipo_usuario
+
+    def is_authenticated(self):
+        return True
+    def is_active(self):
+        return True
+    def is_anonymous(self):
+        return False 
+    def get_id(self):
+        return str(self.id_usuario)
 
 
 class Categoria(db.Model):
@@ -143,9 +163,15 @@ class Perguntas(db.Model):
         self.id_usuario_pergunta = id_usuario_pergunta
 
 
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+@login_manager.user_loader
+def load_user(id):
+    return Usuario.query.get(id)
 
 from flask import session
 
@@ -178,26 +204,29 @@ def home():
 
     return render_template('home.html', anuncios=produtos_por_categoria, user_id=user_id)
 
-
-@app.route('/logout', methods=['POST'])
-def logout():
-    session.pop('user_id', None)
-    return redirect(url_for('home'))
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        senha = request.form['senha']
-        usuario = Usuario.query.filter_by(email=email).first()
+        email = request.form.get('email')
+        senha = hashlib.sha512(str(request.form.get('senha')).encode("utf-8")).hexdigest()
+        usuario = Usuario.query.filter_by(email=email, senha=senha).first()
         
-        if usuario and usuario.senha == senha:
+        if usuario:
+            login_user(usuario)
             session['user_id'] = usuario.id_usuario
             return redirect(url_for('minha_conta', user_id=usuario.id_usuario))
+        
         else:
             return 'Credenciais inválidas!'
     
     return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 @app.route('/cadastro')
 def cadastro():
@@ -205,12 +234,28 @@ def cadastro():
 
 @app.route('/cadastro/usuario', methods=['POST'])
 def cadastro_usuario():
+    cpf = request.form.get('cpf')
+    email = request.form.get('email')
+
+    # Verificar se o CPF já existe no banco de dados
+    existing_cpf = Usuario.query.filter_by(cpf=cpf).first()
+    if existing_cpf:
+        flash('CPF já existe. Por favor, use um CPF diferente.', 'error')
+        return redirect(url_for('cadastro'))
+
+    # Verificar se o email já existe no banco de dados
+    existing_email = Usuario.query.filter_by(email=email).first()
+    if existing_email:
+        flash('Email já existe. Por favor, use um email diferente.', 'error')
+        return redirect(url_for('cadastro'))
+    hash = hashlib.sha512(str(request.form.get('senha')).encode("utf-8")).hexdigest()
     usuario = Usuario(
         nome=request.form.get('nome'),
         email=request.form.get('email'),
         cpf=request.form.get('cpf'),
         endereco=request.form.get('endereco'),
-        senha=request.form.get('senha'),
+        senha=hash,
+        #senha=hashlib.sha512(str(request.form.get('senha')).encode("utf-8")).hexdigest()
         tipo_usuario=request.form.get('tipo_usuario')
     )
     db.session.add(usuario)
@@ -218,11 +263,13 @@ def cadastro_usuario():
     return redirect(url_for('login'))
 
 @app.route('/usuario/<int:id>')
+@login_required
 def get_user(id):
     usuario = Usuario.query.get(id)
     return usuario.nome
 
 @app.route('/editar/<int:id>', methods=["GET", "POST"])
+@login_required
 def editar(id):
     usuario = Usuario.query.get_or_404(id)
     if request.method == 'POST':
@@ -230,7 +277,6 @@ def editar(id):
         usuario.email = request.form['email']
         usuario.cpf = request.form['cpf']
         usuario.endereco = request.form['endereco']
-        usuario.senha = request.form['senha']
         usuario.tipo_usuario = request.form['tipo_usuario']
         try:
             db.session.commit()
@@ -241,6 +287,7 @@ def editar(id):
         return render_template('editar.html', usuario=usuario)
 
 @app.route('/usuario/delete/<int:id>')
+@login_required
 def delete_user(id):
     usuario = Usuario.query.get_or_404(id)
     try:
@@ -251,16 +298,19 @@ def delete_user(id):
         return 'There was a problem deleting that user'
 
 @app.route('/admin')
+@login_required
 def admin():
     usuarios = Usuario.query.all()
     return render_template('admin.html', usuarios=usuarios)
 
 @app.route('/minha_conta/<int:user_id>')
+@login_required
 def minha_conta(user_id):
     return render_template('minha_conta.html', user_id=user_id)
 
 
 @app.route('/anunciar/<int:id>', methods=['GET', 'POST'])
+@login_required
 def anunciar(id):
     if request.method == 'POST':
         titulo = request.form['titulo']
@@ -282,17 +332,19 @@ def anunciar(id):
         db.session.add(novo_produto)
         db.session.commit()
 
-        return redirect(url_for('home'))
-    
+        return redirect(url_for('meus_anuncios', user_id=id))
+                    
     return render_template('anunciar.html', user_id=id)
 
 @app.route('/meus_anuncios/<int:user_id>')
+@login_required
 def meus_anuncios(user_id):
     produtos = Produto.query.filter_by(id_vendedor=user_id).all()
     return render_template('meus_anuncios.html', produtos=produtos, user_id=user_id)
 
 
 @app.route('/delete_produto/<int:produto_id>', methods=['POST'])
+@login_required
 def delete_produto(produto_id):
     user_id = session.get('user_id')
     if not user_id:
@@ -305,6 +357,7 @@ def delete_produto(produto_id):
     return redirect(url_for('meus_anuncios', user_id=user_id))
 
 @app.route('/comprar/<int:id_produto>', methods=['POST'])
+@login_required
 def comprar(id_produto):
     produto = Produto.query.get(id_produto)
     
@@ -335,10 +388,12 @@ def comprar(id_produto):
 
 
 @app.route('/favoritos')
+@login_required
 def favoritos():
     return render_template('favoritos.html')
 
 @app.route('/relatorio/<int:user_id>')
+@login_required
 def relatorio(user_id):
     # Obtém todos os produtos comprados pelo usuário
     produtos_comprados = (
@@ -373,9 +428,14 @@ def relatorio(user_id):
     )
 
 
-if __name__ == 'projeto':
-    print('entrou')
+#if __name__ == 'projeto':
+    #print('entrou')
+    #with app.app_context():
+        #print('criou')
+        #db.create_all()
+    #app.run()
+
+if __name__ == '__main__':
     with app.app_context():
-        print('criou')
         db.create_all()
     app.run()

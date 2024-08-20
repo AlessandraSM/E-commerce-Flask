@@ -4,33 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastre-se</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.margin-bottom-10 {
+            margin-bottom: 10px;
+        }
+
+        .btn-custom {
+            margin-top: 10px;
+        }
+
+        .btn-left {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script>
+        function showAlert(message) {
+            alert(message);
+        }
+    </script>
 </head>
 <body>
-    <h1>Cadastro de Usuário</h1>
-    <form action="/cadastro/usuario" method="POST">
-        <label for="nome">Nome completo do Usuário:</label><br>
-        <input type="text" id="nome" name="nome" required><br><br>
+    
+    <div class="register-container">
+        <h1>Cadastro de Usuário</h1>
 
-        <label for="email">E-mail:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="cpf">CPF:</label><br>
-        <input type="text" id="cpf" name="cpf" required><br><br>
-
-        <label for="endereco">Endereço:</label><br>
-        <input type="text" id="endereco" name="endereco"><br><br>
-
-        <label for="senha">Senha:</label><br>
-        <input type="password" id="senha" name="senha" required><br><br>
-
-        <label for="tipo_usuario">Tipo de Usuário:</label><br>
-        <input type="radio" id="fisica" name="tipo_usuario" value="física" required>
-        <label for="fisica">Pessoa Física</label><br>
-        <input type="radio" id="juridica" name="tipo_usuario" value="jurídica" required>
-        <label for="juridica">Pessoa Jurídica</label><br><br>
-
-        <input type="submit" value="Cadastrar">
-    </form>
-    <button type="button" onclick="window.history.back()">Voltar</button>
+        <form action="/cadastro/usuario" method="POST">
+            <div class="form-group">
+                <label for="nome">Nome completo do Usuário:</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" required>
+            </div>
+            <div class="form-group">
+                <label for="endereco">Endereço:</label>
+                <input type="text" class="form-control" id="endereco" name="endereco">
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input type="password" class="form-control" id="senha" name="senha" required>
+            </div>
+            <div class="form-group margin-bottom-10">
+                <label>Tipo de Usuário:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="fisica" name="tipo_usuario" value="física" required>
+                    <label class="form-check-label" for="fisica">Pessoa Física</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="juridica" name="tipo_usuario" value="jurídica" required>
+                    <label class="form-check-label" for="juridica">Pessoa Jurídica</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+            <button type="button" class="btn btn-secondary btn-right" onclick="window.history.back()">Voltar</button>     
+        </form>
+    </div>
 </body>
 </html>

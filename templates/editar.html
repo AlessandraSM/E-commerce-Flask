@@ -4,33 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .btn-submit {
+            margin-top: 20px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Editar Usuário</h1>
-    <form method="POST">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" value="{{ usuario.nome }}" required><br>
+    <div class="container">
+        <h1>Editar Usuário</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}" required>
+            </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ usuario.email }}" required><br>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
+            </div>
 
-        <label for="cpf">CPF:</label>
-        <input type="text" id="cpf" name="cpf" value="{{ usuario.cpf }}" required><br>
+            <div class="form-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" value="{{ usuario.cpf }}" required>
+            </div>
 
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" name="endereco" value="{{ usuario.endereco }}"><br>
+            <div class="form-group">
+                <label for="endereco">Endereço:</label>
+                <input type="text" class="form-control" id="endereco" name="endereco" value="{{ usuario.endereco }}">
+            </div>
 
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" value="{{ usuario.senha }}" required><br>
+            <div class="form-group">
+                <label for="tipo_usuario">Tipo de Usuário:</label>
+                <select class="form-control" id="tipo_usuario" name="tipo_usuario" required>
+                    <option value="física" {% if usuario.tipo_usuario == 'física' %}selected{% endif %}>Física</option>
+                    <option value="jurídica" {% if usuario.tipo_usuario == 'jurídica' %}selected{% endif %}>Jurídica</option>
+                </select>
+            </div>
 
-        <label for="tipo_usuario">Tipo de Usuário:</label>
-        <select id="tipo_usuario" name="tipo_usuario" required>
-            <option value="física" {% if usuario.tipo_usuario == 'física' %}selected{% endif %}>Física</option>
-            <option value="jurídica" {% if usuario.tipo_usuario == 'jurídica' %}selected{% endif %}>Jurídica</option>
-        </select><br><br>
-
-        <input type="submit" value="Salvar">
-    </form>
+            <div class="text-center">
+                <input type="submit" class="btn btn-primary btn-submit" value="Salvar">
+            </div>
+        </form>
+    </div>
 </body>
 </html>
 

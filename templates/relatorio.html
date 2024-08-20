@@ -4,39 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório de Compras e Vendas</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .report-section {
+            margin-bottom: 30px;
+        }
+        .report-card {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .report-card h3 {
+            margin-top: 0;
+        }
+        .btn-back {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Relatório de Compras e Vendas</h1>
+    <div class="container">
+        <h1 class="text-center">Relatório de Compras e Vendas</h1>
 
-    <h2>Produtos Comprados</h2>
-    <div>
-        {% for produto, data in produtos_comprados %}
-            <div>
-                <h3>{{ produto.titulo }}</h3>
-                <p>Descrição: {{ produto.descricao }}</p>
-                <p>Preço: R${{ produto.preco }}</p>
-                <p>Data da Compra: {{ data.strftime('%d/%m/%Y') }}</p>
+        <div class="report-section">
+            <h2 class="text-center">Produtos Comprados</h2>
+            <div class="row">
+                {% for produto, data in produtos_comprados %}
+                    <div class="col-md-6">
+                        <div class="report-card">
+                            <h3>{{ produto.titulo }}</h3>
+                            <p><strong>Descrição:</strong> {{ produto.descricao }}</p>
+                            <p><strong>Preço:</strong> R${{ produto.preco }}</p>
+                            <p><strong>Data da Compra:</strong> {{ data.strftime('%d/%m/%Y') }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
-    </div>
+        </div>
 
-    <h2>Produtos Vendidos</h2>
-    <div>
-        {% for produto, data in produtos_vendidos %}
-            <div>
-                <h3>{{ produto.titulo }}</h3>
-                <p>Descrição: {{ produto.descricao }}</p>
-                <p>Preço de Venda: R${{ produto.preco }}</p>
-                <p>Data da Venda: {{ data.strftime('%d/%m/%Y') }}</p>
+        <div class="report-section">
+            <h2 class="text-center">Produtos Vendidos</h2>
+            <div class="row">
+                {% for produto, data in produtos_vendidos %}
+                    <div class="col-md-6">
+                        <div class="report-card">
+                            <h3>{{ produto.titulo }}</h3>
+                            <p><strong>Descrição:</strong> {{ produto.descricao }}</p>
+                            <p><strong>Preço de Venda:</strong> R${{ produto.preco }}</p>
+                            <p><strong>Data da Venda:</strong> {{ data.strftime('%d/%m/%Y') }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
-    </div>
+        </div>
 
-    <h2>Relatório de Lucro de Vendas</h2>
-    <div>
-        <p>Lucro Total: R${{ lucro_total }}</p>
-        <p>Observações: O lucro é calculado com base na diferença entre o preço de venda e o preço de compra dos produtos vendidos.</p>
+        <div class="report-section">
+            <h2 class="text-center">Relatório de Lucro de Vendas</h2>
+            <div class="report-card">
+                <p><strong>Lucro Total:</strong> R${{ lucro_total }}</p>
+                <p><strong>Observações:</strong> O lucro é calculado com base na diferença entre o preço de venda e o preço de compra dos produtos vendidos.</p>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Voltar</button>
+        </div>
     </div>
-    <button type="button" onclick="window.history.back()">Voltar</button>
 </body>
 </html>

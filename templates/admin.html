@@ -20,8 +20,8 @@
 </head>
 <body>
     <h1>Lista de Usuários</h1>
-    <table>
-        <thead>
+    <table class="table table-striped table-responsive table-bordered">
+        <thead class="thread-default">
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
@@ -29,6 +29,7 @@
                 <th>CPF</th>
                 <th>Endereço</th>
                 <th>Tipo de Usuário</th>
+                <th>Senha</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -41,6 +42,7 @@
                 <td>{{ usuario.cpf }}</td>
                 <td>{{ usuario.endereco }}</td>
                 <td>{{ usuario.tipo_usuario }}</td>
+                <td>{{ usuario.senha }}</td>
                 <td>
                     <a href="{{ url_for('delete_user', id=usuario.id_usuario) }}">Deletar</a>
                 </td>
